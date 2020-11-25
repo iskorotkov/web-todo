@@ -1,0 +1,15 @@
+version: '3.4'
+
+services:
+  webtodo:
+    image: webtodo
+    build:
+      context: .
+      dockerfile: WebTodo/Dockerfile
+    ports:
+      - 5000:5000
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:5000
+    volumes:
+      - ~/.vsdbg:/remote_debugger:rw
