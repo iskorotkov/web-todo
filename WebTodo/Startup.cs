@@ -45,6 +45,9 @@ namespace WebTodo
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebTodo v1"));
             }
 
+            app.UseDefaultFiles();
+            app.UseStaticFiles();
+
             app.UseHttpsRedirection();
 
             app.UseRouting();
