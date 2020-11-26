@@ -8,7 +8,7 @@ using WebTodo.Models;
 
 namespace WebTodo.Controllers
 {
-    [ApiController, Route("[controller]")]
+    [ApiController, Route("api/[controller]")]
     public class TodoController : ControllerBase
     {
         private readonly TodoContext _context;
@@ -85,9 +85,14 @@ namespace WebTodo.Controllers
             }
         }
 
-        [HttpPut]
-        public async Task<ActionResult> Put(TodoItem item)
+        [HttpPut("{id}")]
+        public async Task<ActionResult> Put(long id, TodoItem item)
         {
+            if (id != item.Id)
+            {
+                return BadRequest();
+            }
+
             _context.TodoItems.Update(item);
 
             try
