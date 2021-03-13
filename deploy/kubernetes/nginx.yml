@@ -1,0 +1,69 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx
+spec:
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+        - name: nginx
+          image: nginx
+          resources:
+            limits:
+              memory: "64Mi"
+              cpu: "100m"
+          ports:
+            - name: web
+              containerPort: 80
+          volumeMounts:
+            - mountPath: /etc/nginx/conf.d/
+              name: config
+              readOnly: true
+      volumes:
+        - name: config
+          configMap:
+            name: nginx-config
+            items:
+              - key: default.conf
+                path: default.conf
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx
+spec:
+  type: LoadBalancer
+  selector:
+    app: nginx
+  ports:
+    - name: web
+      port: 80
+      targetPort: 80
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-config
+data:
+  default.conf: |
+    upstream backend {
+      server backend:80;
+    }
+
+    server {
+      listen 80 default_server;
+
+      charset utf-8;
+      access_log /var/log/nginx/host.access.log main;
+
+      location / {
+        proxy_pass http://backend;
+      }
+    }

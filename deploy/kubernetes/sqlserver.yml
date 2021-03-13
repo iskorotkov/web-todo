@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sqlserver
+spec:
+  selector:
+    matchLabels:
+      app: sqlserver
+  template:
+    metadata:
+      labels:
+        app: sqlserver
+    spec:
+      terminationGracePeriodSeconds: 30
+      hostname: mssqlinst
+      securityContext:
+        fsGroup: 10001
+      containers:
+        - name: sqlserver
+          image: mcr.microsoft.com/mssql/server:2019-latest
+          resources:
+            limits:
+              memory: "2000Mi"
+              cpu: "1000m"
+          ports:
+            - name: web
+              containerPort: 1433
+          env:
+            - name: MSSQL_PID
+              value: "Developer"
+            - name: ACCEPT_EULA
+              value: "Y"
+            - name: SA_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: sqlserver
+                  key: SA_PASSWORD
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sqlserver
+spec:
+  type: NodePort
+  externalTrafficPolicy: Local
+  selector:
+    app: sqlserver
+  ports:
+    - name: web
+      port: 1433
+      targetPort: 1433
