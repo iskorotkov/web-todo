@@ -2,6 +2,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: sqlserver
+  labels:
+    app: sqlserver
 spec:
   selector:
     matchLabels:
