@@ -27,13 +27,22 @@ spec:
             - mountPath: /etc/nginx/conf.d/
               name: config
               readOnly: true
+            - mountPath: /usr/share/nginx/html
+              name: pages
+              readOnly: true
       volumes:
         - name: config
           configMap:
-            name: nginx-config
+            name: nginx
             items:
               - key: default.conf
                 path: default.conf
+        - name: pages
+          configMap:
+            name: nginx
+            items:
+              - key: 50x.html
+                path: 50x.html
 ---
 apiVersion: v1
 kind: Service
@@ -52,7 +61,7 @@ spec:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: nginx-config
+  name: nginx
 data:
   default.conf: |
     upstream backend {
@@ -68,4 +77,38 @@ data:
       location / {
         proxy_pass http://backend;
       }
+
+      error_page 404 /404.html;
+      error_page 500 502 503 504 /50x.html;
+      location = /50x.html {
+        root /usr/share/nginx/html;
+      }
     }
+  50x.html: |
+    <!DOCTYPE html>
+    <html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Web Todo - service is unavailable</title>
+    </head>
+
+    <body>
+        <header>
+            <h1>Service is unavailable</h1>
+        </header>
+
+        <main>
+            <p>All backend instances are down and can't serve your response. Wait several minutes and retry your request.
+            </p>
+        </main>
+
+        <footer>
+            Contact us
+            <a href="mailto:support@webtodo.com?subject=Service is unavailable issue">support@webtodo.com</a>.
+        </footer>
+    </body>
+
+    </html>
