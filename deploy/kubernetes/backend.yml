@@ -4,6 +4,8 @@ metadata:
   name: backend
   labels:
     app: backend
+  annotations:
+    litmuschaos.io/chaos: "true"
 spec:
   replicas: 3
   selector:
@@ -13,6 +15,8 @@ spec:
     metadata:
       labels:
         app: backend
+      annotations:
+        litmuschaos.io/chaos: "true"
     spec:
       containers:
         - name: backend

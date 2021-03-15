@@ -4,6 +4,8 @@ metadata:
   name: sqlserver
   labels:
     app: sqlserver
+  annotations:
+    litmuschaos.io/chaos: "true"
 spec:
   selector:
     matchLabels:
@@ -12,6 +14,8 @@ spec:
     metadata:
       labels:
         app: sqlserver
+      annotations:
+        litmuschaos.io/chaos: "true"
     spec:
       terminationGracePeriodSeconds: 30
       hostname: mssqlinst
