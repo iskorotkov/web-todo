@@ -11,9 +11,8 @@ spec:
             host: backend
       retries:
         attempts: 3
-        perTryTimeout: 200ms
+        perTryTimeout: 1000ms
         retryOn: 5xx
-      timeout: 2s
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
@@ -38,8 +37,3 @@ spec:
     - route:
         - destination:
             host: nginx
-      retries:
-        attempts: 3
-        perTryTimeout: 250ms
-        retryOn: 5xx
-      timeout: 2.5s

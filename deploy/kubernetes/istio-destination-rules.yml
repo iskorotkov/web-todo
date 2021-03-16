@@ -5,12 +5,14 @@ metadata:
 spec:
   host: backend
   trafficPolicy:
-    loadBalancer:
-      simple: LEAST_CONN
     connectionPool:
       tcp:
-        connectTimeout: 200ms
         maxConnections: 100
+      http:
+        http1MaxPendingRequests: 1
+    outlierDetection:
+      consecutive5xxErrors: 3
+      minHealthPercent: 25
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: DestinationRule
@@ -26,9 +28,8 @@ metadata:
 spec:
   host: nginx
   trafficPolicy:
-    loadBalancer:
-      simple: LEAST_CONN
     connectionPool:
       tcp:
-        connectTimeout: 200ms
         maxConnections: 100
+      http:
+        http1MaxPendingRequests: 1
