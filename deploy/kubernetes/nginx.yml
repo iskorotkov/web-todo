@@ -5,6 +5,7 @@ metadata:
   labels:
     app: nginx
 spec:
+  replicas: 3
   selector:
     matchLabels:
       app: nginx
@@ -21,7 +22,7 @@ spec:
               memory: "64Mi"
               cpu: "100m"
           ports:
-            - name: web
+            - name: http
               containerPort: 80
           volumeMounts:
             - mountPath: /etc/nginx/conf.d/
@@ -53,7 +54,7 @@ spec:
   selector:
     app: nginx
   ports:
-    - name: web
+    - name: http
       port: 80
       targetPort: 80
 
@@ -76,6 +77,7 @@ data:
 
       location / {
         proxy_pass http://backend;
+        proxy_http_version 1.1;
       }
 
       error_page 404 /404.html;
