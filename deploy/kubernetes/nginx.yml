@@ -4,6 +4,8 @@ metadata:
   name: nginx
   labels:
     app: nginx
+  annotations:
+    litmuschaos.io/chaos: "true"
 spec:
   replicas: 3
   selector:
@@ -13,6 +15,8 @@ spec:
     metadata:
       labels:
         app: nginx
+      annotations:
+        litmuschaos.io/chaos: "true"
     spec:
       containers:
         - name: nginx
@@ -50,7 +54,7 @@ kind: Service
 metadata:
   name: nginx
 spec:
-  type: LoadBalancer
+  type: NodePort
   selector:
     app: nginx
   ports:
