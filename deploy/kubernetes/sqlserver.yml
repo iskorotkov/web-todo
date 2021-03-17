@@ -26,10 +26,10 @@ spec:
           image: mcr.microsoft.com/mssql/server:2019-latest
           resources:
             limits:
-              memory: "2000Mi"
-              cpu: "1000m"
+              memory: "1500Mi"
+              cpu: "500m"
           ports:
-            - name: web
+            - name: tcp
               containerPort: 1433
           env:
             - name: MSSQL_PID
@@ -52,6 +52,6 @@ spec:
   selector:
     app: sqlserver
   ports:
-    - name: web
+    - name: tcp
       port: 1433
       targetPort: 1433
